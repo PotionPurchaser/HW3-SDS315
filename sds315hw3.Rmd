@@ -1,0 +1,249 @@
+---
+title: "HW3"
+author: "Minh Nguyen"
+output: html_document
+date: "2025-02-13"
+---
+
+```{r global_options, include=FALSE}
+# The following code is a basic setup of options for your document
+knitr::opts_chunk$set(echo = FALSE, # show the code
+                      eval = TRUE, # run the code
+                      warning = TRUE, # show warning messages
+                      message = FALSE, # show basic messages
+                      fig.align = "center"
+                      )
+```
+
+# Q1:
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(boot)
+
+# Load the dataset
+gas_prices <- read_csv("gasprices.csv")
+
+# View the first few rows to understand the structure
+head(gas_prices)
+
+# Summary statistics for price
+summary(gas_prices$Price)
+
+# Theory A: Gas stations charge more if they lack direct competition in sight.
+theory_A <- gas_prices %>%
+  group_by(Competitors) %>%
+  summarise(mean_price = mean(Price, na.rm = TRUE),
+            sd_price = sd(Price, na.rm = TRUE),
+            n = n())
+
+# Perform t-test
+t_test_A <- t.test(Price ~ Competitors, data = gas_prices)
+
+# Theory B: The richer the area, the higher the gas prices.
+cor_test_B <- cor.test(gas_prices$Income, gas_prices$Price, use = "complete.obs")
+
+# Theory C: Gas stations at stoplights charge more.
+theory_C <- gas_prices %>%
+  group_by(Stoplight) %>%
+  summarise(mean_price = mean(Price, na.rm = TRUE),
+            sd_price = sd(Price, na.rm = TRUE),
+            n = n())
+
+t_test_C <- t.test(Price ~ Stoplight, data = gas_prices)
+
+# Theory D: Gas stations with direct highway access charge more.
+theory_D <- gas_prices %>%
+  group_by(Highway) %>%
+  summarise(mean_price = mean(Price, na.rm = TRUE),
+            sd_price = sd(Price, na.rm = TRUE),
+            n = n())
+
+t_test_D <- t.test(Price ~ Highway, data = gas_prices)
+
+# Theory E: Shell charges more than all other non-Shell brands.
+theory_E <- gas_prices %>%
+  group_by(Brand) %>%
+  summarise(mean_price = mean(Price, na.rm = TRUE),
+            sd_price = sd(Price, na.rm = TRUE),
+            n = n())
+
+anova_E <- aov(Price ~ Brand, data = gas_prices)
+anova_summary_E <- summary(anova_E)
+
+# Save results
+write.csv(theory_A, "theory_A_results.csv")
+write.csv(theory_C, "theory_C_results.csv")
+write.csv(theory_D, "theory_D_results.csv")
+write.csv(theory_E, "theory_E_results.csv")
+
+# Print results
+print("Theory A - Competition:")
+print(theory_A)
+print(t_test_A)
+
+print("Theory B - Income Correlation:")
+print(cor_test_B)
+
+print("Theory C - Stoplights:")
+print(theory_C)
+print(t_test_C)
+
+print("Theory D - Highway Access:")
+print(theory_D)
+print(t_test_D)
+
+print("Theory E - Brand Pricing:")
+print(theory_E)
+print(anova_summary_E)
+```
+
+
+# Q2:
+```{r}
+# Load the dataset
+sclass <- read.csv("sclass.csv")
+
+# View the first few rows to understand the structure
+head(sclass)
+
+### PART A: 
+
+# data include only 2011 S-Class 63 AMG cars
+sclass_2011_AMG <- sclass %>% filter(year == 2011, trim == "63 AMG")
+
+# bootstrap function to compute the mean mileage
+boot_mileage <- function(data, indices) {
+  return(mean(data[indices]))  # Compute mean mileage for resampled data
+}
+
+# Perform bootstrap resampling with 10,000 iterations
+set.seed(123)  # Set seed for reproducibility
+bootstrap_results_A <- boot(sclass_2011_AMG$mileage, boot_mileage, R = 10000)
+
+# Compute a 95% confidence interval from the bootstrap results
+ci_A <- boot.ci(bootstrap_results_A, type = "perc")
+
+# Print the confidence interval for interpretation
+print("95% Bootstrap Confidence Interval for Mileage (2011 S-Class 63 AMG):")
+print(ci_A)
+
+### PART B:
+
+# Filter data to include only 2014 S-Class 550 cars
+sclass_2014_550 <- sclass %>% filter(year == 2014, trim == "550")
+
+# Define a new variable (isBlack), which is 1 if the car is black and 0 otherwise
+sclass_2014_550 <- sclass_2014_550 %>%
+  mutate(isBlack = ifelse(color == "Black", 1, 0))
+
+# Define a bootstrap function to compute the proportion of black cars
+boot_black_prop <- function(data, indices) {
+  return(mean(data[indices]))  # Compute proportion of black cars in resampled data
+}
+
+# Perform bootstrap resampling with 10,000 iterations
+set.seed(123)  # Set seed for reproducibility
+bootstrap_results_B <- boot(sclass_2014_550$isBlack, boot_black_prop, R = 10000)
+
+# Compute a 95% confidence interval for the proportion of black cars
+ci_B <- boot.ci(bootstrap_results_B, type = "perc")
+
+# Print the confidence interval for interpretation
+print("95% Bootstrap Confidence Interval for Proportion of Black (2014 S-Class 550):")
+print(ci_B)
+```
+
+# Q3:
+```{r}
+# Load the dataset
+nbc_survey <- read.csv("nbc_pilotsurvey.csv")
+head(nbc_survey)
+
+### PART A: 
+
+# Filter data for relevant shows
+happy_data <- nbc_survey %>%
+  filter(Show %in% c("Living with Ed", "My Name is Earl")) %>%
+  select(Show, Q1_Happy)
+
+# Perform a t-test to compare means
+t_test_A <- t.test(Q1_Happy ~ Show, data = happy_data)
+
+# Print results
+print("95% Confidence Interval for Happiness Ratings (Living with Ed vs. My Name is Earl):")
+print(t_test_A)
+
+### PART B: 
+
+# Filter data for relevant shows
+annoyed_data <- nbc_survey %>%
+  filter(Show %in% c("The Biggest Loser", "The Apprentice: Los Angeles")) %>%
+  select(Show, Q1_Annoyed)
+
+# Perform a t-test to compare means
+t_test_B <- t.test(Q1_Annoyed ~ Show, data = annoyed_data)
+
+# Print results
+print("95% Confidence Interval for Annoyance Ratings (The Biggest Loser vs. The Apprentice: LA):")
+print(t_test_B)
+
+### PART C: 
+
+# Filter data for "Dancing with the Stars"
+confused_data <- nbc_survey %>%
+  filter(Show == "Dancing with the Stars") %>%
+  mutate(isConfused = ifelse(Q2_Confusing >= 4, 1, 0))
+
+# Define bootstrap function for proportion
+boot_confused_prop <- function(data, indices) {
+  return(mean(data[indices]))  # Compute proportion of confused viewers
+}
+
+# bootstrap resampling with 10,000 iterations
+set.seed(123)  # Set seed for reproducibility
+bootstrap_results_C <- boot(confused_data$isConfused, boot_confused_prop, R = 10000)
+
+# 95% confidence interval for the proportion
+ci_C <- boot.ci(bootstrap_results_C, type = "perc")
+
+# Print results
+print("95% Bootstrap Confidence Interval for Confusion Ratings (Dancing with the Stars):")
+print(ci_C)
+```
+# Q4: 
+```{r}
+ebay <- read.csv("ebay.csv")
+
+# View the first few rows to understand the structure
+head(ebay)
+
+### Revenue Ratio
+# Revenue ratio = revenue after / revenue before
+ebay <- ebay %>%
+  mutate(revenue_ratio = rev_after / rev_before)
+
+# Split data into treatment and control groups
+treatment <- ebay %>% filter(adwords_pause == 1) %>% pull(revenue_ratio)
+control <- ebay %>% filter(adwords_pause == 0) %>% pull(revenue_ratio)
+
+# Define a bootstrap function to compute the difference in means
+boot_revenue_diff <- function(data, indices) {
+  treatment_sample <- sample(treatment, length(treatment), replace = TRUE)
+  control_sample <- sample(control, length(control), replace = TRUE)
+  return(mean(treatment_sample) - mean(control_sample))
+}
+
+# bootstrap resampling with 10,000 iterations
+set.seed(123)  # Set seed for reproducibility
+bootstrap_results <- boot(data = ebay, statistic = function(d, i) boot_revenue_diff(d, i), R = 10000)
+
+# 95% confidence interval for the difference in revenue ratios
+ci_revenue <- boot.ci(bootstrap_results, type = "perc")
+
+# Print results
+print("95% Bootstrap Confidence Interval for Difference in Revenue Ratios (Treatment - Control):")
+print(ci_revenue)
+```
