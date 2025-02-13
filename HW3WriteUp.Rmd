@@ -1,0 +1,382 @@
+---
+title: "WriteUpHW3"
+output: html_document
+date: "2025-02-11"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Name: Minh K Nguyen
+
+UT EID: mkn747
+
+[GitHub Repo](https://github.com/PotionPurchaser/HW3-SDS315.git)
+
+## Question 1
+
+### Theory A: Gas stations charge more if they lack direct competition in sight.
+
+Claim: Gas stations without competitors charge higher prices compared to
+those with competition.
+
+Evidence:
+
+Mean Prices:
+
+-   Stations without competitors: \$1.876 per gallon
+
+-   Stations with competitors: \$1.852 per gallon
+
+![](hw3problem1theoryA.png)
+
+Welch’s t-test result:
+
+-   t = 1.4585, p-value = 0.148 (not statistically significant).
+
+95% Confidence Interval: [-\$0.0085, \$0.0554].
+
+![](hw3problem1theoryA2.png)
+
+Interpretation: The mean price difference is very small. The confidence
+interval includes 0, meaning that there is a likely chance that there
+are no significant differences.
+
+Conclusion: This theory is not supported. While gas stations without
+competitors do charge slightly more, the difference is not statistically
+significant (p \> 0.05).
+
+### Theory B: The richer the area, the higher the gas prices.
+
+Claim: Gas stations in higher-income ZIP codes charge higher prices for
+gasoline.
+
+Evidence:
+
+-   Pearson correlation coefficient: r = 0.396 (moderate positive
+    correlation).
+
+-   Statistical Test Results: t = 4.29, p-value = 4.12e-5 (highly
+    significant).
+
+-   95% Confidence Interval for correlation: [0.218, 0.549].
+
+![](hw3problem1theoryB1.png)
+
+Interpretation: Higher median income is associated with higher gas
+prices. However, the correlation is not the strongest which means other
+factors also play a role.
+
+Conclusion: This theory is supported. There is a moderate but
+statistically significant positive correlation between income and gas
+prices.
+
+### Theory C: Gas stations at stoplights charge more.
+
+Claim : Gas stations near stoplights charge higher prices due to
+convenience.
+
+Evidence:
+
+Mean Prices:
+
+-   Without stoplight: \$1.866 per gallon
+
+-   With stoplight: \$1.863 per gallon
+
+-   Welch’s t-test result: t = 0.187, p-value = 0.852 (not significant).
+
+-   95% Confidence Interval: [-\$0.0319, \$0.0385].
+
+![](hw3problem1theoryC1.png) ![](hw3problem1theoryC2.png)
+
+Interpretation: The price difference is negligible (0.03 cents). The
+confidence interval includes 0, indicating no meaningful effect.
+
+Conclusion: This theory is not supported. Stoplight presence does not
+significantly impact gas prices.
+
+### Theory D: Gas stations with direct highway access charge more.
+
+Claim: Gas stations with highway access charge higher prices, taking
+advantage of convenience for drivers.
+
+Evidence:
+
+Mean Prices:
+
+-   Without highway access: \$1.854 per gallon
+
+-   With highway access: \$1.900 per gallon
+
+Welch’s t-test result: t = -2.463, p-value = 0.0188 (statistically
+significant).
+
+95% Confidence Interval: [-\$0.0834, -\$0.0080].
+
+![](hw3problem1theoryD1.png) ![](hw3problem1theoryD2.png)
+
+Interpretation: Highway-access stations charge 4.6 cents more per
+gallon. The confidence interval does not include 0, meaning the
+difference is statistically significant.
+
+Conclusion:
+
+This theory is supported. Gas stations with highway access charge
+significantly more, confirming that highway convenience allows for
+higher pricing.
+
+### Theory E: Shell charges more than all other non-Shell brands.
+
+Claim: Shell charges higher prices than ExxonMobil, ChevronTexaco, and
+other brands.
+
+Evidence:
+
+ANOVA Test Result: F = 1.681, p-value = 0.176 (not significant). Mean
+price differences between brands were small.
+
+![](hw3problem1theoryE1.png) ![](hw3problem1theoryE2.png)
+
+Interpretation: The ANOVA test shows no significant price difference
+between brands. While Shell might charge more in specific cases, the
+effect is not strong across all stations.
+
+Conclusion: This theory is not supported. While Shell may have a
+reputation for higher prices, the data does not show a statistically
+significant difference among brands.
+
+## Question 2:
+
+### Part A:
+
+Claim: The average mileage of 2011 Mercedes S-Class 63 AMG vehicles on
+the used-car market falls within a specific range.
+
+Evidence:
+
+-   Bootstrap Sampling: The dataset contained 116 used 2011 S-Class 63
+    AMG vehicles. A bootstrap resampling method (10,000 iterations) was
+    used to estimate the 95% confidence interval for the average
+    mileage.
+
+Results:
+
+-   Estimated mean mileage: Between 26,335 and 31,861 miles
+
+-   95% Confidence Interval: (26,335, 31,861) miles
+
+![](hw3problem2partA.png)
+
+Interpretation: The confidence interval suggests that the true mean
+mileage of 2011 S-Class 63 AMG vehicles is likely to be between 26,335
+and 31,861 miles. The bootstrap method accounts for sample variability
+which makes it a more reliable estimate than a single sample mean.
+
+Conclusion: The estimated average mileage of 2011 S-Class 63 AMG
+vehicles on the used-car market is between 26,335 and 31,861 miles, with
+95% confidence. This means that if we repeatedly sampled vehicles, 95%
+of the time, the true average mileage would fall within this range.
+
+### Part B:
+
+Claim: A specific proportion of 2014 Mercedes S-Class 550 vehicles on
+the used-car market were painted black.
+
+Evidence:
+
+-   Binary Variable Creation: A new variable isBlack was created, where
+    1 = Black, 0 = Not Black. The dataset contained 2,889 used 2014
+    S-Class 550 vehicles.
+
+```{=html}
+<!-- -->
+```
+-   Bootstrap Sampling: A bootstrap resampling method (10,000
+    iterations) was applied to estimate the proportion of black cars.
+
+Results:
+
+-   Observed proportion of black cars: Between 41.68% and 45.28%
+
+-   95% Confidence Interval: (0.4168, 0.4528)
+
+![](hw3problem2partB.png)
+
+Interpretation: The confidence interval suggests that between 41.68% and
+45.28% of all 2014 S-Class 550 vehicles were black in the used-car
+market. A narrow confidence interval suggests greater precision in
+estimating the true proportion.
+
+Conclusion: The estimated proportion of black 2014 S-Class 550s in the
+used-car market is between 41.68% and 45.28% with 95% confidence. This
+means that if we were to sample another set of vehicles, we would expect
+the true proportion of black S-Class 550s to fall within this range.
+
+## Question 3
+
+### Part A:
+
+1)  Question Does Living with Ed or My Name is Earl generate higher
+    viewer happiness ratings?
+
+2)  Approach Statistical Test:
+
+    A Welch’s t-test was used to compare the mean Q1_Happy ratings
+    between the two shows.
+
+    Graphical Analysis: A boxplot was created to visualize the happiness
+    rating distributions.
+
+3)  Results:
+
+    Mean Happiness Ratings:
+
+    -   Living with Ed: 3.93
+
+    -   My Name is Earl: 3.78
+
+        Welch’s t-test result: t = 1.168, p-value = 0.2447 (not
+        statistically significant).
+
+        95% Confidence Interval: (-0.103, 0.401)
+
+![](hw3problem3partA.png)
+
+Interpretation: The confidence interval suggests that the true
+difference in mean happiness ratings is likely between -0.103 and 0.401.
+Since the confidence interval includes 0 and the p-value is greater than
+0.05, there is no strong statistical evidence to conclude that one show
+makes people significantly happier than the other.
+
+4\. Conclusion: The data suggests that there is no significant
+difference in happiness ratings between Living with Ed and My Name is
+Earl. Living with Ed has a slightly higher mean rating, but the
+difference is not statistically significant, meaning it may have
+occurred by chance.
+
+### Part B
+
+1)  Question: Do viewers find The Biggest Loser or The Apprentice: Los
+    Angeles more annoying?
+
+2)  Approach Statistical Test:
+
+    A Welch’s t-test was used to compare the mean Q1_Annoyed ratings
+    between the two shows.
+
+    Graphical Analysis: A boxplot was used to show differences in
+    annoyance ratings.
+
+3)  Results:
+
+    Mean Annoyance Ratings:
+
+    The Apprentice: Los Angeles: 2.31
+
+    The Biggest Loser: 2.04
+
+    Welch’s t-test result: t = 2.103, p-value = 0.0363 (statistically
+    significant).
+
+    95% Confidence Interval: (0.017, 0.525)
+
+![](hw3problem3partB.png)
+
+Interpretation: The confidence interval suggests that the true
+difference in mean annoyance ratings is likely between 0.017 and 0.525.
+Since the confidence interval does not include 0 and the p-value is
+below 0.05, the difference is statistically significant, meaning The
+Apprentice: Los Angeles was rated as more annoying than The Biggest
+Loser with high confidence.
+
+4\. Conclusion: The data suggests that The Apprentice: Los Angeles was
+significantly more annoying to viewers than The Biggest Loser. Since the
+confidence interval does not include 0, we can conclude that the
+difference is statistically meaningful rather than due to random
+variation.
+
+### Part C:
+
+1)  Question What proportion of viewers found Dancing with the Stars
+    confusing (gave a rating of 4 or 5 on Q2_Confusing)?
+
+2)  Approach:
+
+    -   Binary Variable Creation: Defined a new variable isConfused (1 =
+        rating ≥4, 0 = rating ≤3).
+
+    -   Statistical Tool: Used bootstrap resampling (10,000 iterations)
+        to estimate the 95% confidence interval for the proportion of
+        confused viewers.
+
+3)  Results Observed Proportion of Confused Viewers:
+
+    -   Between 3.87% and 11.60% 95%
+
+    -   Confidence Interval: (0.0387, 0.1160)
+
+![](hw3problem3partC.png)
+
+Interpretation: The confidence interval suggests that the true
+proportion of confused viewers is likely between 3.87% and 11.60%. This
+means that a small but notable percentage of viewers found the show
+confusing.
+
+4.Conclusion: Between 3.87% and 11.60% of viewers found Dancing with the
+Stars confusing. While this is a minority of the audience, it suggests
+that the show’s format may be unclear or difficult to follow for some
+viewers.
+
+## Question 4:
+
+Question: Does turning off Google AdWords advertising impact eBay’s
+revenue? Specifically, does the revenue ratio (after/before revenue)
+differ significantly between the treatment group (ads paused) and the
+control group (ads continued)?
+
+![](hw3problem4picture1.png)
+
+Approach:
+
+Statistical Test Used:
+
+-   Bootstrap resampling (10,000 Monte Carlo simulations) was performed
+    to compute a 95% confidence interval for the difference in revenue
+    ratios between the treatment and control groups.
+
+-   Revenue Ratio Definition: Revenue Ratio = Revenue After / Revenue
+    Before (for each DMA). If paid search ads drive extra revenue, the
+    control group (where ads continued) should have a higher revenue
+    ratio than the treatment group (where ads were paused).
+
+-   Comparison Metric: The difference in mean revenue ratios between
+    treatment and control groups was analyzed.
+
+Results:
+
+-   95% Bootstrap Confidence Interval for Difference in Revenue Ratios:
+    (-0.0916, -0.0136).
+
+![](hw3problem4picture2.png)
+
+Interpretation: Since the entire confidence interval is negative, this
+indicates that the treatment group (ads paused) had a lower revenue
+ratio compared to the control group (ads continued). The difference is
+statistically significant because the confidence interval does not
+include 0, meaning the effect is unlikely to be due to chance. The
+negative effect size suggests that stopping paid search ads led to a
+revenue decrease.
+
+Conclusion:
+
+The data supports the hypothesis that paid Google AdWords advertising
+increases eBay’s revenue. Since the 95% confidence interval for the
+revenue ratio difference is entirely negative (-0.0916, -0.0136), we can
+conclude that pausing ads led to a statistically significant revenue
+decline. This suggests that paid search advertising is beneficial for
+eBay's revenue generation, and cutting off these ads reduces revenue.
